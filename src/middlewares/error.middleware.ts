@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import logger from "../utils/logger";
 
 export const globalErrorHandler = (
   err: any,
@@ -6,6 +7,8 @@ export const globalErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
+  logger.error(err);
+
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
 
