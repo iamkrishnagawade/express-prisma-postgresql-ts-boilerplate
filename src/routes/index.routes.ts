@@ -1,0 +1,47 @@
+import { Router, Request, Response, NextFunction } from "express";
+import { asyncHandler } from "../utils/asyncHandler";
+import { getUsers } from "../controllers/user.controller";
+import AppError from "../utils/AppError";
+
+const router = Router();
+
+router.get("/health", (_req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "API running",
+  });
+});
+
+// Test error middleware
+router.get("/error", (_req: Request, _res: Response) => {
+  throw new Error("Test error route");
+});
+
+// Test async error
+router.get(
+  "/async-error",
+  asyncHandler(async (_req: Request, _res: Response) => {
+    throw new Error("Async route error");
+  }),
+);
+
+// Users routes
+router.get("/users", asyncHandler(getUsers));
+
+// Test custom error
+router.get(
+  "/custom-error",
+  asyncHandler(async (_req: Request, res: Response) => {
+    const user = null;
+
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    res.status(200).json({
+      success: true,
+    });
+  }),
+);
+
+export default router;
