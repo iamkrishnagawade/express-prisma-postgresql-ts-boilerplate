@@ -1,7 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { getUsers } from "../controllers/user.controller";
+import { createUser, getUsers } from "../controllers/user.controller";
 import AppError from "../utils/AppError";
+import { validate } from "../middlewares/validate.middleware";
+import { createUserSchema } from "../validations/user.validation";
 
 const router = Router();
 
@@ -27,6 +29,7 @@ router.get(
 
 // Users routes
 router.get("/users", asyncHandler(getUsers));
+router.post("/users", validate(createUserSchema), asyncHandler(createUser));
 
 // Test custom error
 router.get(

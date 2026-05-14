@@ -17,3 +17,9 @@ export const getUsers = async (req: Request, res: Response) => {
     total: 50,
   });
 };
+
+export const createUser = async (req: Request, res: Response) => {
+  const user = req.body;
+
+  return sendResponse(res, 201, "User created successfully", user);
+};

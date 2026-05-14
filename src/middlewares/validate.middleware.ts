@@ -1,0 +1,29 @@
+import { Request, Response, NextFunction } from "express";
+import { success, z, ZodError } from "zod";
+
+export const validate =
+  (schema: z.ZodTypeAny) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      schema.parse({
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      });
+
+      next();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation Error",
+          errors: error.issues.map((err: any) => ({
+            field: err.path.join("."),
+            message: err.message,
+          })),
+        });
+      }
+
+      next(error);
+    }
+  };
