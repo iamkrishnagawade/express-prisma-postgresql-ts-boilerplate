@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { sendResponse } from "../utils/apiResponse";
+import { createUserService } from "../services/user.service";
 
 export const getUsers = async (req: Request, res: Response) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -21,5 +22,6 @@ export const getUsers = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
   const user = req.body;
 
-  return sendResponse(res, 201, "User created successfully", user);
+  const result = await createUserService(req.body);
+  return sendResponse(res, 201, "User created successfully", result);
 };
