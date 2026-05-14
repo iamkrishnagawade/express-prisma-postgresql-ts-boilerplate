@@ -4,6 +4,7 @@ import { createUser, getUsers } from "../controllers/user.controller";
 import AppError from "../utils/AppError";
 import { validate } from "../middlewares/validate.middleware";
 import { createUserSchema } from "../validations/user.validation";
+import authRoutes from "./auth.routes";
 
 const router = Router();
 
@@ -30,6 +31,9 @@ router.get(
 // Users routes
 router.get("/users", asyncHandler(getUsers));
 router.post("/users", validate(createUserSchema), asyncHandler(createUser));
+
+// Auth routes
+router.use("/auth", authRoutes);
 
 // Test custom error
 router.get(
