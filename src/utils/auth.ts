@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
+import { Request } from "express";
+import crypto from "crypto";
 
 export const hashPassword = async (password: string) => {
   return bcrypt.hash(password, 10);
@@ -45,4 +47,20 @@ export const generateRefreshToken = (payload: {
       expiresIn: env.JWT_REFRESH_EXPIRES_IN,
     } as jwt.SignOptions,
   );
+};
+
+export const collectDeviceTrackingInfo = (req: Request) => {
+  // Collect device tracking information
+  const ipAddress = req.ip || req.socket.remoteAddress;
+  const userAgent = req.headers["user-agent"];
+  const fingerprint = crypto
+    .createHash("sha256")
+    .update(`${ipAddress}-${userAgent}`)
+    .digest("hex");
+
+  return {
+    ipAddress,
+    userAgent,
+    fingerprint,
+  };
 };

@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import { sendResponse } from "../utils/apiResponse";
 import {
   loginUserService,
+  refreshAccessTokenService,
   registerUserService,
 } from "../services/auth.service";
 import { prisma } from "../config/prisma";
-import AppError from "../utils/AppError";
-import { env } from "../config/env";
-import { generateAccessToken } from "../utils/auth";
+import { collectDeviceTrackingInfo } from "../utils/auth";
 
 export const registerUser = async (req: Request, res: Response) => {
-  const { access_token, refresh_token } = await registerUserService(req.body);
+  const device_tracking_info = collectDeviceTrackingInfo(req);
+  const { access_token, refresh_token } = await registerUserService(
+    req.body,
+    device_tracking_info,
+  );
   res.cookie("refreshToken", refresh_token, {
     httpOnly: true,
     secure: false,
@@ -23,7 +25,11 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-  const { access_token, refresh_token } = await loginUserService(req.body);
+  const device_tracking_info = collectDeviceTrackingInfo(req);
+  const { access_token, refresh_token } = await loginUserService(
+    req.body,
+    device_tracking_info,
+  );
   res.cookie("refreshToken", refresh_token, {
     httpOnly: true,
     secure: false,
@@ -59,26 +65,34 @@ export const adminDashboard = async (req: Request, res: Response) => {
 // Refresh access token
 export const refreshAccessToken = async (req: Request, res: Response) => {
   const token = req.cookies.refreshToken;
+  const device_tracking_info = collectDeviceTrackingInfo(req);
 
-  if (!token) {
-    throw new AppError("Refresh token missing", 401);
-  }
+  const { newAccessToken, newRefreshToken } = await refreshAccessTokenService(
+    token,
+    device_tracking_info,
+  );
 
-  const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET!) as {
-    userId: string;
-    role: string;
-  };
-
-  const accessToken = generateAccessToken({
-    userId: decoded.userId,
-    role: decoded.role,
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
   });
 
-  return sendResponse(res, 200, "Token refreshed", { accessToken });
+  return sendResponse(res, 200, "Token refreshed", { newAccessToken });
 };
 
 // Logout user
 export const logoutUser = async (req: Request, res: Response) => {
+  const token = req.cookies.refreshToken;
+  await prisma.refreshToken.update({
+    where: {
+      token,
+    },
+    data: {
+      revoked: true,
+    },
+  });
+
   res.clearCookie("refreshToken", {
     httpOnly: true,
     secure: false,
