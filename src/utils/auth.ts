@@ -13,17 +13,36 @@ export const comparePassword = async (
   return bcrypt.compare(password, hashedPassword);
 };
 
-export const generateToken = (payload: { userId: string; role: string }) => {
+export const generateAccessToken = (payload: {
+  userId: string;
+  role: string;
+}) => {
   if (!env.JWT_SECRET) {
     throw new Error("JWT_SECRET is not define.");
   }
-  const expiresIn = env.JWT_EXPIRES_IN || "7d"; // string
 
   return jwt.sign(
     payload,
     env.JWT_SECRET as jwt.Secret,
     {
       expiresIn: env.JWT_EXPIRES_IN,
+    } as jwt.SignOptions,
+  );
+};
+
+export const generateRefreshToken = (payload: {
+  userId: string;
+  role: string;
+}) => {
+  if (!env.JWT_REFRESH_SECRET) {
+    throw new Error("JWT_REFRESH_SECRET is not define.");
+  }
+
+  return jwt.sign(
+    payload,
+    env.JWT_REFRESH_SECRET as jwt.Secret,
+    {
+      expiresIn: env.JWT_REFRESH_EXPIRES_IN,
     } as jwt.SignOptions,
   );
 };

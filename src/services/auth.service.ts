@@ -1,6 +1,11 @@
 import { prisma } from "../config/prisma";
 import AppError from "../utils/AppError";
-import { hashPassword, comparePassword, generateToken } from "../utils/auth";
+import {
+  hashPassword,
+  comparePassword,
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/auth";
 
 export const registerUserService = async (payload: {
   name: string;
@@ -26,10 +31,19 @@ export const registerUserService = async (payload: {
     },
   });
 
-  const token = generateToken({ userId: user.id, role: user.role });
+  const access_token = generateAccessToken({
+    userId: user.id,
+    role: user.role,
+  });
+
+  const refresh_token = generateRefreshToken({
+    userId: user.id,
+    role: user.role,
+  });
 
   return {
-    token,
+    access_token,
+    refresh_token,
     user: {
       id: user.id,
       name: user.name,
@@ -61,10 +75,19 @@ export const loginUserService = async (payload: {
     throw new AppError("Invalid credentials", 401);
   }
 
-  const token = generateToken({ userId: user.id, role: user.role });
+  const access_token = generateAccessToken({
+    userId: user.id,
+    role: user.role,
+  });
+
+  const refresh_token = generateRefreshToken({
+    userId: user.id,
+    role: user.role,
+  });
 
   return {
-    token,
+    access_token,
+    refresh_token,
     user: {
       id: user.id,
       name: user.name,

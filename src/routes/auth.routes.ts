@@ -6,6 +6,8 @@ import {
   adminDashboard,
   getMe,
   loginUser,
+  logoutUser,
+  refreshAccessToken,
   registerUser,
 } from "../controllers/auth.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
@@ -22,5 +24,7 @@ router.get(
   authorizeRole("ADMIN", "SUPER_ADMIN"),
   asyncHandler(adminDashboard),
 );
+router.post("/refresh-token", asyncHandler(refreshAccessToken));
+router.post("/logout", asyncHandler(logoutUser));
 
 export default router;
