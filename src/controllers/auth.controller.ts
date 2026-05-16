@@ -32,3 +32,10 @@ export const getMe = async (req: Request, res: Response) => {
 
   return sendResponse(res, 200, "User fetched successfully", user);
 };
+
+// Admin controller
+export const adminDashboard = async (req: Request, res: Response) => {
+  return sendResponse(res, 200, "Welcome Admin", {
+    user: req.user,
+  });
+};

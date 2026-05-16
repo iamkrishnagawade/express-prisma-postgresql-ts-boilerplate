@@ -13,7 +13,7 @@ export const comparePassword = async (
   return bcrypt.compare(password, hashedPassword);
 };
 
-export const generateToken = (payload: { userId: string }) => {
+export const generateToken = (payload: { userId: string; role: string }) => {
   if (!env.JWT_SECRET) {
     throw new Error("JWT_SECRET is not define.");
   }

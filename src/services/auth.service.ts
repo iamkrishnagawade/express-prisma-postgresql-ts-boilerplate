@@ -26,7 +26,7 @@ export const registerUserService = async (payload: {
     },
   });
 
-  const token = generateToken({ userId: user.id });
+  const token = generateToken({ userId: user.id, role: user.role });
 
   return {
     token,
@@ -61,7 +61,7 @@ export const loginUserService = async (payload: {
     throw new AppError("Invalid credentials", 401);
   }
 
-  const token = generateToken({ userId: user.id });
+  const token = generateToken({ userId: user.id, role: user.role });
 
   return {
     token,

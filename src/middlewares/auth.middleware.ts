@@ -21,6 +21,7 @@ export const authMiddleware = (
 
     req.user = decoded as {
       userId: string;
+      role: string;
     };
 
     next();
