@@ -10,7 +10,7 @@ export const hashPassword = async (password: string) => {
 
 export const comparePassword = async (
   password: string,
-  hashedPassword: string,
+  hashedPassword: string
 ) => {
   return bcrypt.compare(password, hashedPassword);
 };
@@ -28,7 +28,7 @@ export const generateAccessToken = (payload: {
     env.JWT_SECRET as jwt.Secret,
     {
       expiresIn: env.JWT_EXPIRES_IN,
-    } as jwt.SignOptions,
+    } as jwt.SignOptions
   );
 };
 
@@ -45,7 +45,7 @@ export const generateRefreshToken = (payload: {
     env.JWT_REFRESH_SECRET as jwt.Secret,
     {
       expiresIn: env.JWT_REFRESH_EXPIRES_IN,
-    } as jwt.SignOptions,
+    } as jwt.SignOptions
   );
 };
 

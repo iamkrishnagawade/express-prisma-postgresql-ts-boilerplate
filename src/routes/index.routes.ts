@@ -8,7 +8,7 @@ import authRoutes from "./auth.routes";
 
 const router = Router();
 
-router.get("/health", (_req: Request, res: Response) => {
+router.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: "API running",
@@ -16,16 +16,16 @@ router.get("/health", (_req: Request, res: Response) => {
 });
 
 // Test error middleware
-router.get("/error", (_req: Request, _res: Response) => {
+router.get("/error", (req: Request, _res: Response) => {
   throw new Error("Test error route");
 });
 
 // Test async error
 router.get(
   "/async-error",
-  asyncHandler(async (_req: Request, _res: Response) => {
+  asyncHandler(async (req: Request, _res: Response) => {
     throw new Error("Async route error");
-  }),
+  })
 );
 
 // Users routes
@@ -48,7 +48,7 @@ router.get(
     res.status(200).json({
       success: true,
     });
-  }),
+  })
 );
 
 export default router;

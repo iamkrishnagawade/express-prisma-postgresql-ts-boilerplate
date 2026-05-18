@@ -4,6 +4,6 @@ import logger from "./utils/logger";
 
 app.listen(env.PORT, () => {
   logger.info(
-    `Server running on port: ${env.PORT} and Environment: ${env.NODE_ENV}`,
+    `Server running on port: ${env.PORT} and Environment: ${env.NODE_ENV}`
   );
 });

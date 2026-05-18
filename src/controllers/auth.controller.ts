@@ -12,7 +12,7 @@ export const registerUser = async (req: Request, res: Response) => {
   const device_tracking_info = collectDeviceTrackingInfo(req);
   const { access_token, refresh_token } = await registerUserService(
     req.body,
-    device_tracking_info,
+    device_tracking_info
   );
   res.cookie("refreshToken", refresh_token, {
     httpOnly: true,
@@ -28,7 +28,7 @@ export const loginUser = async (req: Request, res: Response) => {
   const device_tracking_info = collectDeviceTrackingInfo(req);
   const { access_token, refresh_token } = await loginUserService(
     req.body,
-    device_tracking_info,
+    device_tracking_info
   );
   res.cookie("refreshToken", refresh_token, {
     httpOnly: true,
@@ -69,7 +69,7 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
 
   const { newAccessToken, newRefreshToken } = await refreshAccessTokenService(
     token,
-    device_tracking_info,
+    device_tracking_info
   );
 
   res.cookie("refreshToken", newRefreshToken, {

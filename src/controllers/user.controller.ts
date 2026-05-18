@@ -22,6 +22,6 @@ export const getUsers = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
   const user = req.body;
 
-  const result = await createUserService(req.body);
+  const result = await createUserService(user);
   return sendResponse(res, 201, "User created successfully", result);
 };

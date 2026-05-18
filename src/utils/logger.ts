@@ -9,7 +9,7 @@ const logger = winston.createLogger({
     }),
     winston.format.printf(({ level, message, timestamp, stack }) => {
       return `[${timestamp}] ${level.toUpperCase()}: ${stack || message}`;
-    }),
+    })
   ),
   transports: [
     new winston.transports.Console(),

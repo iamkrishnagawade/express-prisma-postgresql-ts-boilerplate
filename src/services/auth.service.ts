@@ -19,7 +19,7 @@ export const registerUserService = async (
     ipAddress: string | undefined;
     userAgent: string | undefined;
     fingerprint: string;
-  },
+  }
 ) => {
   const { ipAddress, userAgent, fingerprint } = device_tracking_info;
   const existingUser = await prisma.user.findUnique({
@@ -82,7 +82,7 @@ export const loginUserService = async (
     ipAddress: string | undefined;
     userAgent: string | undefined;
     fingerprint: string;
-  },
+  }
 ) => {
   const { ipAddress, userAgent, fingerprint } = device_tracking_info;
   const user = await prisma.user.findUnique({
@@ -97,7 +97,7 @@ export const loginUserService = async (
 
   const isPasswordMatched = await comparePassword(
     payload.password,
-    user.password,
+    user.password
   );
 
   if (!isPasswordMatched) {
@@ -142,7 +142,7 @@ export const refreshAccessTokenService = async (
     ipAddress: string | undefined;
     userAgent: string | undefined;
     fingerprint: string;
-  },
+  }
 ) => {
   const { ipAddress, userAgent, fingerprint } = device_tracking_info;
   if (!token) {

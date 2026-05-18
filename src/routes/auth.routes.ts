@@ -58,7 +58,7 @@ router.get(
   "/admin",
   authMiddleware,
   authorizeRole("ADMIN", "SUPER_ADMIN"),
-  asyncHandler(adminDashboard),
+  asyncHandler(adminDashboard)
 );
 router.post("/refresh-token", asyncHandler(refreshAccessToken));
 router.post("/logout", asyncHandler(logoutUser));
