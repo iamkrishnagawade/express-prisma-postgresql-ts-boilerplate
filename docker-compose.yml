@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    container_name: express-prisma-postgresql-ts-boilerplate
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/mydb
+      JWT_SECRET: super-secret-key
+      JWT_REFRESH_SECRET: refresh-secret
+    command: npm run dev
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-db
+    restart: always
+    ports:
+      - "5433:5432" # host:container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
