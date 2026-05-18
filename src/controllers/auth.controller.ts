@@ -35,7 +35,7 @@ export const loginUser = async (req: Request, res: Response) => {
     secure: false,
     sameSite: "strict",
   });
-  return sendResponse(res, 201, "login successfully", { access_token });
+  return sendResponse(res, 200, "login successfully", { access_token });
 };
 
 // Protected controller

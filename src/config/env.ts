@@ -1,15 +1,23 @@
-import dotenv from "dotenv";
+import "dotenv/config";
+import { z } from "zod";
 
-dotenv.config();
+const envSchema = z.object({
+  NODE_ENV: z.enum(["development", "production", "test"]),
+  PORT: z.coerce.number(),
+  DATABASE_URL: z.url(),
+  JWT_SECRET: z.string().min(10),
+  JWT_EXPIRES_IN: z.string(),
+  JWT_REFRESH_SECRET: z.string().min(10),
+  JWT_REFRESH_EXPIRES_IN: z.string(),
+});
 
-export const env = {
-  PORT: process.env.PORT || 5000,
-  NODE_ENV: process.env.NODE_ENV || "development",
-  DATABASE_URL:
-    process.env.DATABASE_URL ||
-    "postgresql://postgres:postgres@localhost:5432/mydb",
-  JWT_SECRET: process.env.JWT_SECRET ?? "",
-  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "7d",
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ?? "",
-  JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || "30d",
-};
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  console.error("Invalid environment variables:");
+  console.error(JSON.stringify(parsedEnv.error.issues, null, 2));
+
+  process.exit(1);
+}
+
+export const env = parsedEnv.data;

@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { createUser, getUsers } from "../controllers/user.controller";
 import AppError from "../utils/AppError";
@@ -16,14 +16,14 @@ router.get("/health", (req: Request, res: Response) => {
 });
 
 // Test error middleware
-router.get("/error", (req: Request, _res: Response) => {
+router.get("/error", (req: Request, res: Response) => {
   throw new Error("Test error route");
 });
 
 // Test async error
 router.get(
   "/async-error",
-  asyncHandler(async (req: Request, _res: Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     throw new Error("Async route error");
   })
 );
@@ -38,7 +38,7 @@ router.use("/auth", authRoutes);
 // Test custom error
 router.get(
   "/custom-error",
-  asyncHandler(async (_req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const user = null;
 
     if (!user) {
